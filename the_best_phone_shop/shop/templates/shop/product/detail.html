@@ -1,0 +1,32 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ product.name }}
+{% endblock %}
+
+{% block content %}
+  <div class="product-detail">
+    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+    <h1>{{ product.name }} {{ product.memory }}Gb {{ product.color }}</h1>
+    <h2>
+      <a href="{{ product.manufacturer.get_absolute_url }}">
+        {{ product.manufacturer }}
+      </a>
+    </h2>
+    <p class="price">${{ product.price }}</p>
+    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+      {{ cart_product_form }}
+      {% csrf_token %}
+      <input type="submit" value="Add to cart">
+    </form>
+    <p>CPU: {{ product.cpu }}</p>
+    <p>RAM: {{ product.ram }} Gb</p>
+    <p>Display diagonal: {{ product.display_diagonal }}"</p>
+    <p>Display resolution: {{ product.display_resolution_height }} x {{ product.display_resolution_width }}</p>
+    <p>Display refresh rate: {{ product.display_refresh_rate }} Hz</p>
+    <p>Camera: {{ product.camera }}</p>
+    <p>Phone size: {{ product.height }}mm x {{ product.width }}mm x {{ product.thickness }}mm</p>
+    <p>Weight: {{ product.weight }}g</p>
+  </div>
+{% endblock %}
