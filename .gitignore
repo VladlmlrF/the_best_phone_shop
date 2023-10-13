@@ -120,7 +120,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-phone_shop/.env
+the_best_phone_shop/.env
 .venv
 env/
 venv/
