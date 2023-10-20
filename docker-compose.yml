@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+
+  web:
+    build: .
+    command: ["./wait-for-it.sh", "db:5432", "--", "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini"]
+    restart: always
+    volumes:
+      - .:/code
+    environment:
+      - DJANGO_SETTINGS_MODULE=the_best_phone_shop.settings.prod
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.4
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:7.2.1
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    hostname: worker
+    restart: always
+    command: celery -A the_best_phone_shop worker -l info
+    volumes:
+      - ./the_best_phone_shop:/code
+    environment:
+      - DJANGO_SETTINGS_MODULE=the_best_phone_shop.settings.prod
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - redis
+      - db
+
+  nginx:
+    image: nginx:1.23.1
+    restart: always
+    volumes:
+      - ./config/nginx:/etc/nginx/templates
+      - .:/code
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    container_name: stripe-cli
+    command: "listen --api-key ${STRIPE_SECRET_KEY} --device-name ${STRIPE_DEVICE_NAME} --forward-to http://web:www.phone-shop.com/payment/webhook/"
+    depends_on:
+      - web
