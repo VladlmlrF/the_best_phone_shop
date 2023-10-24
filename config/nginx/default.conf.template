@@ -5,7 +5,7 @@ upstream uwsgi_app {
 
 server {
     listen 80;
-    server_name www.phone-shop.com phone-shop.com;
+    server_name www.2096447-ss06420.twc1.net 2096447-ss06420.twc1.net;
     return 301 https://$host$request_uri;
 }
 
@@ -13,7 +13,7 @@ server {
     listen               443 ssl;
     ssl_certificate      /code/the_best_phone_shop/ssl/phone-shop.crt;
     ssl_certificate_key  /code/the_best_phone_shop/ssl/phone-shop.key;
-    server_name www.phone-shop.com phone-shop.com;
+    server_name www.2096447-ss06420.twc1.net 2096447-ss06420.twc1.net;
     error_log    stderr warn;
     access_log   /dev/stdout main;
 

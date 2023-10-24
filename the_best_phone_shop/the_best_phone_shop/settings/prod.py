@@ -3,7 +3,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.phone-shop.com', 'phone-shop.com']
+ALLOWED_HOSTS = ['www.2096447-ss06420.twc1.net', '2096447-ss06420.twc1.net']
 
 DATABASES = {
    'default': {
